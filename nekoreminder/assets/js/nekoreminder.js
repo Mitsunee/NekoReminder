@@ -20,7 +20,7 @@ neko.init = function() {
 
     //NOTIFICATIONS
     if (Notification.permission === "default") {
-        //Notification.requestPermission();
+        Notification.requestPermission();
     }
 
     // SETUP TICKER
