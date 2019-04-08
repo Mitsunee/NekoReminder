@@ -1,0 +1,112 @@
+html, body {
+    min-height: 100%;
+    min-width: 500px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+@import url('https://fonts.googleapis.com/css?family=Cairo');
+*,
+*::before,
+*::after {
+    box-sizing: border-box
+}
+html {
+    /**background: repeating-linear-gradient(to bottom right,#F93 ,#FAF 120px) #EE8800 fixed;**/
+    background: repeating-linear-gradient(135deg, #FC9, #FB7 100px, #FBF 100px, #FDF 130px, #FDF 200px) #FB7 fixed;
+}
+body {
+    font-family: 'Cairo', sans-serif;
+}
+
+main,
+noscript,
+section > div {
+    diplay: block;
+    width: 90%;
+    margin: 1em auto;
+    border: 1px solid #ddd;
+    padding: 14px;
+    background-color: rgba(255,255,255,0.75);
+    box-shadow: 2px 2px 7px 2px rgba(100,100,100,0.3);
+}
+
+button,
+label {
+    display: inline-block;
+    background: linear-gradient(to bottom, #FA5, #FB7) #FA5;
+    padding: 6px;
+    height: 30px;
+    font-size: 13.5px;
+    border: 1px solid #FDF;
+    border-radius: 12px;
+    box-shadow: 1px 1px 3px rgba(100,100,100,0.3);
+    transition: transform 0.1s;
+}
+button {
+    position: relative;
+    top: -1px;
+    margin-right: 8px;
+}
+button:hover,
+label:hover {
+    transform: scale(1.05);
+    box-shadow: 1px 1px 3px rgba(75, 75, 75, 0.4);
+}
+
+input[type="checkbox"] {
+    padding: 0;
+    margin: 0;
+}
+
+main table {
+    margin-bottom: 12px;
+}
+
+h1,
+h2 {
+    margin: 8px 0px;
+}
+
+span.small {
+    display: block;
+    margin-top: 8px;
+    font-size:12px;
+    color:#222;
+}
+
+footer {
+    position: fixed;
+    bottom: 0px;
+    right: 0px;
+    width:100%;
+    border: 1px solid #ddd;
+    padding: 8px;
+    background-color: rgba(255,255,255,0.75);
+    box-shadow: 0px -2px 7px 2px rgba(100,100,100,0.3);
+}
+
+progress {
+	width: 400px;
+	height: 32px;
+	display: block;
+	-webkit-appearance: none;
+	border: none;
+}
+/* background */
+progress::-webkit-progress-bar {
+	background: rgba(80, 30, 30, 0.33);
+	border-radius: 16px;
+	padding: 1px;
+    overflow: hidden;
+}
+/* Now the value part */
+progress::-webkit-progress-value {
+	border-radius: 12px;
+	box-shadow: 0 1px 1px 0 rgba(255, 255, 255, 0.4);
+	background: linear-gradient(to bottom, #F94, #FB7) #F94;
+}
+progress[value="100"]::-webkit-progress-value {
+	border-radius: 16px;
+	background: linear-gradient(to bottom, #6D0, #BF7) #F94;
+}
