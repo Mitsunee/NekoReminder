@@ -37,7 +37,7 @@
             </tr>
         </table>
         <button id="reminder-submit">Start Reminder</button>
-        <label for="reminder-onblur-setting"><input type="checkbox" id="reminder-onblur-setting">Lower Tickrate when tab not active</label>
+        <label for="reminder-onblur-setting"><input type="checkbox" id="reminder-onblur-setting"> Lower Tickrate when tab not active</label>
     </section>
     <section id="timer-area"></section>
     <footer>&copy;2019 Mitsunee</footer>
