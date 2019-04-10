@@ -85,6 +85,7 @@ neko.submit = function() {
                     $("<button>").html("Yes").on("click", function(){
                         thisTimerUI.remove();
                         timers[thisIndex].status = "deleted";
+                        toastr["success"]("Removed Timer &quot;" + timers[thisIndex].note + "&quot;","Removed Timer");
                     }.bind(thisIndex, thisTimerUI))
                 )
                 .append(
@@ -98,6 +99,7 @@ neko.submit = function() {
         // remove timer
         thisTimerUI.remove();
         timers[thisIndex].status = "deleted";
+        toastr["success"]("Removed Timer &quot;" + timers[thisIndex].note + "&quot;","Removed Timer");
     }.bind(newTimer)));
     // Title
     el.append($("<h2>").html(newTimer.note));
@@ -114,8 +116,11 @@ neko.submit = function() {
         $("<span>", {'class': 'small'})
             .html('Ends in <span>' + neko.timeFromMilliseconds(target*1000) + '</span> (at ' + targetTime.toLocaleTimeString() + ')')
     );
+
+    // Submit timer
     timerArea.append(el);
     timers.push(newTimer);
+    toastr["success"]("Created Timer &quot;" + newTimer.note + "&quot;", "Created Timer");
 }
 // TICK FUNCTION
 neko.tick = function() {
@@ -129,17 +134,15 @@ neko.tick = function() {
 
         timer.lastTick = now;
         // Update UI
+        $("#"+timer.id).find("span.small > span").html(neko.timeFromMilliseconds(timer.target - now));
         if (progress >= 100) {
             progressBar.css("width", "100%").html('100%').addClass("progress-finished");
-        } else {
-            progressBar.css("width", progress.toString()+"%").html((0|progress).toString()+"%");
-        }
-        $("#"+timer.id).find("span.small > span").html(neko.timeFromMilliseconds(timer.target - now));
-
-        if (now >= timer.target) {
             timer.status = "finished";
-            new Notification("Your Timer "+timer.note+" ended!");
+            new Notification('Your Timer "' + timer.note + '" ended!');
+            toastr["info"]("Timer &quot;" + timer.note + "&quot; ended", "Timer ended");
+            return;
         }
+        progressBar.css("width", progress.toString()+"%").html((0|progress).toString()+"%");
     }
 }
 
@@ -167,4 +170,22 @@ neko.timeFromMilliseconds = function(stamp) {
     retval += (i < 10 ? "0" : "") + i.toString();
 
     return retval;
+}
+
+toastr.options = {
+  "closeButton": true,
+  "debug": false,
+  "newestOnTop": true,
+  "progressBar": true,
+  "positionClass": "toast-top-right",
+  "preventDuplicates": false,
+  "onclick": null,
+  "showDuration": "300",
+  "hideDuration": "1000",
+  "timeOut": "5000",
+  "extendedTimeOut": "1000",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "fadeIn",
+  "hideMethod": "fadeOut"
 }
