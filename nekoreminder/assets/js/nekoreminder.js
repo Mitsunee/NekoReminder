@@ -65,13 +65,41 @@ neko.submit = function() {
         'id': newTimer.id,
         'class': 'timer'
     });
+    // Close Button
     el.append($("<button>").html("X").on("click",function(){//Close function
-        $("#"+newTimer.id).remove();
-        let thisTimer = timers.findIndex(function(i){
-            return i.id === newTimer.id;
-        }.bind(newTimer));
-        timers[thisTimer].status = "deleted";
+        // find this timer in global array
+        let thisIndex = timers.findIndex(function(i){
+                return i.id === newTimer.id;
+            }.bind(newTimer)),
+            thisTimer = timers[thisIndex],
+            thisTimerUI = $("#"+thisTimer.id);
+
+        // if timer is running create confirmBox instead
+        if (thisTimer.status == 'running') {
+            if (thisTimerUI.find('.confirm-box').length > 0) return;
+
+            // create confirmBox
+            let confirmBox = $("<div>",{'class': 'confirm-box'});
+            confirmBox.html('Do you really want to delete &quot;'+thisTimer.note+"&quot;?<br><br>")
+                .append(
+                    $("<button>").html("Yes").on("click", function(){
+                        thisTimerUI.remove();
+                        timers[thisIndex].status = "deleted";
+                    }.bind(thisIndex, thisTimerUI))
+                )
+                .append(
+                    $("<button>").html("No").on("click", function(){
+                        $(this).parent().remove();
+                    })
+                );
+            thisTimerUI.append(confirmBox);
+            return;
+        }
+        // remove timer
+        thisTimerUI.remove();
+        timers[thisIndex].status = "deleted";
     }.bind(newTimer)));
+    // Title
     el.append($("<h2>").html(newTimer.note));
     // ProgressBar
     el.append(
