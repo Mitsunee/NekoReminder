@@ -1,5 +1,5 @@
 // SETUP GLOBAL VARS
-var timerArea, reminderNumTemp, reminderNote, reminderSubmit,
+var timerArea, reminderNum, reminderNote, reminderSubmit,
     timers = [],
     neko = {};
 
@@ -11,7 +11,7 @@ $(function(){
 // INIT FUNCTION
 neko.init = function() {
     timerArea = $("#timer-area");
-    reminderNumTemp = $("#temp-reminder-number");
+    reminderNum = $("#reminder-number");
     reminderNote = $("#reminder-note");
     reminderSubmit = $("#reminder-submit");
 
@@ -46,11 +46,15 @@ neko.init = function() {
 neko.submit = function() {
     let newTimer = {},
         now = Date.now(),
-        target = reminderNumTemp[0].valueAsNumber,
-        targetTime = new Date(now + (target * 1000)),
+        target = reminderNum.val().toLowerCase(),
+        targetTime,
         el;
 
-    if (isNaN(target)) return;
+    target.replace(/[^0-9a-z]/gi, '');//filter out bad symbols
+    if (/^[0-9]+$/.test(target)) target += "s";// if target is only digits assume seconds
+    target = 0| (interval.prototype.convert(target) / 1000);// convert units to milliseconds and divide by 1000 rounding down.
+    if (target == 0) return;// if empty quit;
+    targetTime = new Date(now + (target * 1000));
 
     // Set data
     newTimer.target = now + (target * 1000);

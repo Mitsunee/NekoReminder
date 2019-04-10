@@ -31,7 +31,7 @@
         <table>
             <tr>
                 <td>Remind in:</td>
-                <td><input type="number" id="temp-reminder-number" value="60"> Seconds</td>
+                <td><input type="text" id="reminder-number" placeholder="Time"></td>
             </tr>
             <tr>
                 <td>Note:</td>
