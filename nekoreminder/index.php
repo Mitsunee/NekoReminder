@@ -15,9 +15,9 @@
     <meta property="og:title" content="Neko Reminder">
     <meta property="og:image" content=""><!--TBD-->
     <meta property="og:description" content="The accurate browser-based Reminder tool built on custom time-keeping code.">
-    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/main.css?_<?php echo filemtime("assets/css/main.css");?>">
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
-    <script src="assets/js/nekoreminder.min.js"></script><!-- minimize for production!-->
+    <script src="assets/js/nekoreminder.min.js?_<?php echo filemtime("assets/js/nekoreminder.min.js");?>"></script><!-- minimize for production!-->
     <script src="assets/js/ejs.intervals.min.js"></script>
 </head>
 <body>
