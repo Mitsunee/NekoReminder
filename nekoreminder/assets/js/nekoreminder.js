@@ -112,7 +112,7 @@ neko.submit = function() {
     // Text output
     el.append(
         $("<span>", {'class': 'small'})
-            .html('Ends at ' + targetTime.toLocaleTimeString())
+            .html('Ends in <span>' + neko.timeFromMilliseconds(target*1000) + '</span> (at ' + targetTime.toLocaleTimeString() + ')')
     );
     timerArea.append(el);
     timers.push(newTimer);
@@ -128,15 +128,43 @@ neko.tick = function() {
             diff = now - timer.lastTick;
 
         timer.lastTick = now;
+        // Update UI
         if (progress >= 100) {
             progressBar.css("width", "100%").html('100%').addClass("progress-finished");
         } else {
             progressBar.css("width", progress.toString()+"%").html((0|progress).toString()+"%");
         }
+        $("#"+timer.id).find("span.small > span").html(neko.timeFromMilliseconds(timer.target - now));
 
         if (now >= timer.target) {
             timer.status = "finished";
             new Notification("Your Timer "+timer.note+" ended!");
         }
     }
+}
+
+neko.timeFromMilliseconds = function(stamp) {
+    let i = Math.ceil(Number(stamp)/1000),
+        hasHours = false,
+        retval = "";
+
+    // Hours
+    if (i >= 3600) {
+        let hours = 0| (i/3600);
+        i = i - (hours*3600);
+        retval += (hours < 10 ? "0" : "") + hours.toString() +":";
+        hasHours = true;
+    }
+    // Minutes
+    if (hasHours || i >= 60) {
+        let minutes = 0| (i/60);
+        i = i - (minutes*60);
+        retval += (minutes < 10 ? "0" : "") + minutes.toString() +":";
+    } else {
+        retval += "00:"
+    }
+    // Seconds
+    retval += (i < 10 ? "0" : "") + i.toString();
+
+    return retval;
 }
