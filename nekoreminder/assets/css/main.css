@@ -21,7 +21,7 @@ body {
 
 main,
 noscript,
-section > div {
+.timer {
     diplay: block;
     width: 90%;
     margin: 1em auto;
@@ -53,6 +53,7 @@ label:hover {
     transform: scale(1.05);
     box-shadow: 1px 1px 3px rgba(75, 75, 75, 0.4);
 }
+.timer > button {float: left;}
 
 input[type="checkbox"] {
     padding: 0;
@@ -86,27 +87,26 @@ footer {
     box-shadow: 0px -2px 7px 2px rgba(100,100,100,0.3);
 }
 
-progress {
-	width: 400px;
-	height: 32px;
-	display: block;
-	-webkit-appearance: none;
-	border: none;
-}
-/* background */
-progress::-webkit-progress-bar {
+.progress {
+    width: 400px;
+    height: 32px;
+    border: none;
 	background: rgba(80, 30, 30, 0.33);
 	border-radius: 16px;
 	padding: 1px;
     overflow: hidden;
 }
-/* Now the value part */
-progress::-webkit-progress-value {
+.progress-value {
+    height: 100%;
 	border-radius: 12px;
 	box-shadow: 0 1px 1px 0 rgba(255, 255, 255, 0.4);
 	background: linear-gradient(to bottom, #F94, #FB7) #F94;
+    color: white;
+    text-align: center;
+    overflow: hidden;
+    padding:7px 0px;
 }
-progress[value="100"]::-webkit-progress-value {
+.progress-finished {
 	border-radius: 16px;
-	background: linear-gradient(to bottom, #6D0, #BF7) #F94;
+	background: linear-gradient(to bottom, #4A0, #8C3) #F94;
 }

@@ -1,7 +1,6 @@
 // SETUP GLOBAL VARS
 var timerArea, reminderNumTemp, reminderNote, reminderSubmit,
     timers = [],
-    userTimezone = "",
     neko = {};
 
 // EXECUTE INIT
@@ -74,13 +73,19 @@ neko.submit = function() {
         timers[thisTimer].status = "deleted";
     }.bind(newTimer)));
     el.append($("<h2>").html(newTimer.note));
-    el.append($("<progress>", {
-        'value': "0",
-        'max': "100"
-    }));
-    el.append($("<span>",{
-        'class': 'small'
-    }).html('Ends at ' + targetTime.toLocaleTimeString()));
+    // ProgressBar
+    el.append(
+        $("<div>", {'class': 'progress'})
+            .append($("<div>", {'class': 'progress-value'})
+                .css("width", "0%")
+                .html("0%")
+            )
+    );
+    // Text output
+    el.append(
+        $("<span>", {'class': 'small'})
+            .html('Ends at ' + targetTime.toLocaleTimeString())
+    );
     timerArea.append(el);
     timers.push(newTimer);
 }
@@ -90,17 +95,20 @@ neko.tick = function() {
     for (timer of timers) {
         if (timer.status != "running") continue;
         let now = Date.now(),
-            diff = now - timer.lastTick,
-            progress = 0| (((now - timer.startedAt) / (timer.target - timer.startedAt)) * 100);
+            progress = ((now - timer.startedAt) / (timer.target - timer.startedAt)) * 100,
+            progressBar = $("#"+timer.id).find(".progress-value"),
+            diff = now - timer.lastTick;
 
         timer.lastTick = now;
-        if (progress > 100) progress = 100;
+        if (progress >= 100) {
+            progressBar.css("width", "100%").html('100%').addClass("progress-finished");
+        } else {
+            progressBar.css("width", progress.toString()+"%").html((0|progress).toString()+"%");
+        }
 
         if (now >= timer.target) {
             timer.status = "finished";
             new Notification("Your Timer "+timer.note+" ended!");
         }
-
-        $("#"+timer.id).find("progress").prop("value", progress);
     }
 }
