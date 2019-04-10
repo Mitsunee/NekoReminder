@@ -23,7 +23,7 @@
 <body>
     <noscript>This site relies on javascript. It appears your browser is blocking javascript or does not support it.</noscript>
     <!--<section id="localstorage-permission-request">Neko Reminder can save your reminders in your browser's localstorage. Would you like to enable this feature?<button id="permit-local-button">Yes</button></section>-->
-    <main>
+    <section id="form">
         <p style="display:none;">The accurate browser-based Reminder tool built on custom time-keeping code.</p>
         <h1>New Reminder</h1>
         <table>
@@ -38,7 +38,7 @@
         </table>
         <button id="reminder-submit">Start Reminder</button>
         <label for="reminder-onblur-setting"><input type="checkbox" id="reminder-onblur-setting">Lower Tickrate when tab not active</label>
-    </main>
+    </section>
     <section id="timer-area"></section>
     <footer>&copy;2019 Mitsunee</footer>
 </body>
