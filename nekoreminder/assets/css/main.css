@@ -26,6 +26,7 @@ noscript,
     padding: 14px;
     background-color: rgba(255,255,255,0.75);
     box-shadow: 2px 2px 7px 2px rgba(100,100,100,0.3);
+    user-select: none;
 }
 .timer {
     float: left;
@@ -33,6 +34,7 @@ noscript,
     margin: 1em;
     margin-left: 0;
     padding-right: 6px;
+    user-select: none;
 }
 #form {
     width: 90%;
@@ -105,6 +107,7 @@ footer {
     padding: 8px;
     background-color: rgba(255,255,255,0.75);
     box-shadow: 0px -2px 7px 2px rgba(100,100,100,0.3);
+    user-select: none;
 }
 
 .progress {
