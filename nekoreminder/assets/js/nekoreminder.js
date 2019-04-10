@@ -155,6 +155,8 @@ neko.timeFromMilliseconds = function(stamp) {
         hasHours = false,
         retval = "";
 
+    if (i < 0) i = 0;
+
     // Hours
     if (i >= 3600) {
         let hours = 0| (i/3600);
