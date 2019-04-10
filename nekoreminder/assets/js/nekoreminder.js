@@ -50,10 +50,10 @@ neko.submit = function() {
         targetTime,
         el;
 
-    target.replace(/[^0-9a-z]/gi, '');//filter out bad symbols
+    target = target.replace(/[^0-9a-z]/gi, '');//filter out bad symbols
+    if (target == 0) return;// if empty quit;
     if (/^[0-9]+$/.test(target)) target += "s";// if target is only digits assume seconds
     target = 0| (interval.prototype.convert(target) / 1000);// convert units to milliseconds and divide by 1000 rounding down.
-    if (target == 0) return;// if empty quit;
     targetTime = new Date(now + (target * 1000));
 
     // Set data
