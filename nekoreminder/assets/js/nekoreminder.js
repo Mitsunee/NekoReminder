@@ -24,11 +24,10 @@ neko.init = function() {
 
     // SETUP TICKER
     neko.ticker = new interval(neko.tick, 100);
-    neko.ticker.start();
 
     // WINDOW EVENTS
     window.addEventListener('blur', function() {
-        if ($("#reminder-onblur-setting").prop('checked')) {
+        if ($("#reminder-onblur-setting").prop('checked') && neko.ticker.running) {
             neko.ticker.end();
             neko.ticker.time = 5000;
             neko.ticker.start();
@@ -36,9 +35,10 @@ neko.init = function() {
     });
     window.addEventListener('focus', function() {
         if (neko.ticker.time != 100) {
-            neko.ticker.end();
+            let wasRunning = neko.ticker.running;
+            if (wasRunning) neko.ticker.end();
             neko.ticker.time = 100;
-            neko.ticker.start();
+            if (wasRunning) neko.ticker.start();
         }
     });
 }
@@ -84,8 +84,8 @@ neko.submit = function() {
                 .append(
                     $("<button>").html("Yes").on("click", function(){
                         thisTimerUI.remove();
-                        timers[thisIndex].status = "deleted";
                         toastr["success"]("Removed Timer &quot;" + timers[thisIndex].note + "&quot;","Removed Timer");
+                        timers.splice(thisIndex, 1);
                     }.bind(thisIndex, thisTimerUI))
                 )
                 .append(
@@ -98,8 +98,8 @@ neko.submit = function() {
         }
         // remove timer
         thisTimerUI.remove();
-        timers[thisIndex].status = "deleted";
         toastr["success"]("Removed Timer &quot;" + timers[thisIndex].note + "&quot;","Removed Timer");
+        timers.splice(thisIndex, 1);
     }.bind(newTimer)));
     // Title
     el.append($("<h2>").html(newTimer.note));
@@ -120,11 +120,15 @@ neko.submit = function() {
     // Submit timer
     timerArea.append(el);
     timers.push(newTimer);
+    neko.ticker.start();
     toastr["success"]("Created Timer &quot;" + newTimer.note + "&quot;", "Created Timer");
 }
 // TICK FUNCTION
 neko.tick = function() {
-    if (timers.length < 1) return;
+    if (timers.length < 1) {
+        neko.ticker.end();
+        return;
+    }
     for (timer of timers) {
         if (timer.status != "running") continue;
         let now = Date.now(),
