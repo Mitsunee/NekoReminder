@@ -41,6 +41,11 @@ neko.init = function() {
             if (wasRunning) neko.ticker.start();
         }
     });
+
+    //SORTABLE
+    timerArea.sortable({
+        'containment': '#timer-area'
+    });
 }
 // SUBMIT BUTTON FUNCTION
 neko.submit = function() {

@@ -29,6 +29,7 @@ noscript,
 }
 .timer {
     float: left;
+    height: 123px;
     width: 32%;
     margin: 1% 2% 0 0;
 }
@@ -43,7 +44,10 @@ noscript,
     width: 90%;
     margin: 1% auto;
 }
-#timer-area {margin: 0 5%;}
+#timer-area {
+    margin: 0 5%;
+    min-height: 130px;
+}
 
 button,
 label {
@@ -135,7 +139,7 @@ footer {
 
 .progress {
     width: 100%;
-    height: 48%;
+    height: 34px;
     border: none;
 	background: rgba(80, 30, 30, 0.33);
 	border-radius: 16px;
