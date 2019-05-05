@@ -46,14 +46,21 @@ neko.init = function() {
 neko.submit = function() {
     let newTimer = {},
         now = Date.now(),
-        target = reminderNum.val().toLowerCase(),
+        targetInput = tagsInputRead(reminderNum[0]),
+        target = 0,
         targetTime,
         el;
 
-    target = target.replace(/[^0-9a-z]/gi, '');//filter out bad symbols
-    if (target == 0) return;// if empty quit;
-    if (/^[0-9]+$/.test(target)) target += "s";// if target is only digits assume seconds
-    target = 0| (interval.prototype.convert(target) / 1000);// convert units to milliseconds and divide by 1000 rounding down.
+    if (targetInput.length < 1) return;// if empty quit;
+    for(let i in targetInput) {
+        if (/^([0-9]+)(h|hr|m|min|s|sec)$/g.test(targetInput[i])) {
+            target += interval.prototype.convert(targetInput[i]);
+        } else if (/^[0-9]+$/g.test(targetInput[i])) {
+            target += interval.prototype.convert(targetInput[i]+"s");
+        }
+    }
+    if (target == 0) return;
+    target = 0| (target / 1000);// convert units to milliseconds and divide by 1000 rounding down.
     targetTime = new Date(now + (target * 1000));
 
     // Set data

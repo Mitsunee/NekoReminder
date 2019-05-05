@@ -29,7 +29,7 @@
         <table>
             <tr>
                 <td>Remind in:</td>
-                <td><input type="text" id="reminder-number" placeholder="Time"></td>
+                <td><div class="tags-input" id="reminder-number" title="Tip: You can use the following units: h, hr, m, min, s, sec and seperate multiple using a Comma or Space"><input type="text" placeholder="Time"></div></td>
             </tr>
             <tr>
                 <td>Note:</td>
