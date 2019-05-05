@@ -22,7 +22,6 @@
 </head>
 <body>
     <noscript>This site relies on javascript. It appears your browser is blocking javascript or does not support it.</noscript>
-    <!--<section id="localstorage-permission-request">Neko Reminder can save your reminders in your browser's localstorage. Would you like to enable this feature?<button id="permit-local-button">Yes</button></section>-->
     <section id="form">
         <p style="display:none;">The accurate browser-based Reminder tool built on custom time-keeping code.</p>
         <h1>New Reminder</h1>
