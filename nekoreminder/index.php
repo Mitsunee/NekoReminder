@@ -10,10 +10,10 @@
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Neko Reminder">
     <meta name="twitter:description" content="The accurate browser-based Reminder tool built on custom time-keeping code.">
-    <meta name="twitter:image" content=""><!--TBD-->
+    <meta name="twitter:image" content="favicon.png">
     <meta name="twitter:creator" content="@Mitsunee">
     <meta property="og:title" content="Neko Reminder">
-    <meta property="og:image" content=""><!--TBD-->
+    <meta property="og:image" content="favicon.png">
     <meta property="og:description" content="The accurate browser-based Reminder tool built on custom time-keeping code.">
     <link rel="stylesheet" href="assets/css/toastr-2.1.3.min.css">
     <link rel="stylesheet" href="assets/css/main.css?_<?php echo filemtime("assets/css/main.css");?>">
