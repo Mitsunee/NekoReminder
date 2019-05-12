@@ -1,8 +1,7 @@
 // SETUP GLOBAL VARS
 var neko = {
         'timers': [],
-        'timerdata': {},
-        'ticker': new interval(neko.tick, 100)
+        'timerData': {}
 };
 
 // RUN INIT ON LOAD
@@ -16,6 +15,9 @@ neko.init = function() {
     if (Notification.permission === "default") {
         Notification.requestPermission();
     }
+
+    // SETUP TICKER
+    neko.ticker = new interval(neko.tick, 100);
 
     // WINDOW EVENTS
     window.addEventListener('blur', function() {
@@ -39,14 +41,12 @@ neko.init = function() {
         'containment': '#timer-area'
     });
 }
+
 // SUBMIT BUTTON FUNCTION
 neko.submit = function() {
-    let newTimer = {},
-        now = Date.now(),
-        targetInput = tagsInputRead($("#reminder-number")[0]),
+    let targetInput = tagsInputRead($("#reminder-number")[0]),
         target = 0,
-        targetTime,
-        el;
+        note = $("#reminder-note").val().replace('<', '&lt;').replace('>', '&gt;');
 
     if (targetInput.length < 1) return;// if empty quit;
     for(let i in targetInput) {
@@ -58,11 +58,20 @@ neko.submit = function() {
     }
     if (target == 0) return;
     target = 0| (target / 1000);// convert units to milliseconds and divide by 1000 rounding down.
-    targetTime = new Date(now + (target * 1000));
+
+    neko.createTimer(target, note);
+}
+
+neko.createTimer = function(target, note) {
+    let newTimer = {},
+        now = Date.now(),
+        targetTime,
+        el;
 
     // Set data
+    targetTime = new Date(now + (target * 1000));
     newTimer.target = now + (target * 1000);
-    newTimer.note = $("#reminder-note").val().replace('<', '&lt;').replace('>', '&gt;') || "Untitled Timer";
+    newTimer.note = note || "Untitled Timer";
     newTimer.lastTick = now;
     newTimer.startedAt = now;
     newTimer.id = now.toString(16);
@@ -76,10 +85,7 @@ neko.submit = function() {
     // Close Button
     el.append($("<button>").html("X").on("click",function(){//Close function
         // find this timer in global array
-        let thisIndex = neko.timers.findIndex(function(i){
-                return i.id === newTimer.id;
-            }.bind(newTimer)),
-            thisTimer = neko.timers[thisIndex],
+        let thisTimer = neko.timerData[newTimer.id],
             thisTimerUI = $("#"+thisTimer.id);
 
         // if timer is running create confirmBox instead
@@ -92,9 +98,9 @@ neko.submit = function() {
                 .append(
                     $("<button>").html("Yes").on("click", function(){
                         thisTimerUI.remove();
-                        toastr["success"]("Removed Timer &quot;" + neko.timers[thisIndex].note + "&quot;","Removed Timer");
-                        neko.timers.splice(thisIndex, 1);
-                    }.bind(thisIndex, thisTimerUI))
+                        toastr["success"]("Removed Timer &quot;" + thisTimer.note + "&quot;","Removed Timer");
+                        neko.timers.splice(neko.timers.indexOf(thisTimer.id), 1);
+                    }.bind(thisTimer, thisTimerUI))
                 )
                 .append(
                     $("<button>").html("No").on("click", function(){
@@ -106,8 +112,8 @@ neko.submit = function() {
         }
         // remove timer
         thisTimerUI.remove();
-        toastr["success"]("Removed Timer &quot;" + neko.timers[thisIndex].note + "&quot;","Removed Timer");
-        neko.timers.splice(thisIndex, 1);
+        toastr["success"]("Removed Timer &quot;" + thisTimer.note + "&quot;","Removed Timer");
+        neko.timers.splice(neko.timers.indexOf(newTimer.id), 1);
     }.bind(newTimer)));
     // Title
     el.append($("<h2>").html(newTimer.note));
@@ -127,26 +133,29 @@ neko.submit = function() {
 
     // Submit timer
     $("#timer-area").append(el);
-    neko.timers.push(newTimer);
+    neko.timers.push(newTimer.id);
+    neko.timerData[newTimer.id] = newTimer;
     neko.ticker.start();
     toastr["success"]("Created Timer &quot;" + newTimer.note + "&quot;", "Created Timer");
 }
+
 // TICK FUNCTION
 neko.tick = function() {
     if (neko.timers.length < 1) {
         neko.ticker.end();
         return;
     }
-    for (let timer of neko.timers) {
+    for (let timerId of neko.timers) {
+        let timer = neko.timerData[timerId];
         if (timer.status != "running") continue;
         let now = Date.now(),
             progress = ((now - timer.startedAt) / (timer.target - timer.startedAt)) * 100,
-            progressBar = $("#"+timer.id).find(".progress-value"),
+            progressBar = $("#"+timerId).find(".progress-value"),
             diff = now - timer.lastTick;
 
         timer.lastTick = now;
         // Update UI
-        $("#"+timer.id).find("span.small > span").html(neko.timeFromMilliseconds(timer.target - now));
+        $("#"+timerId).find("span.small > span").html(neko.timeFromMilliseconds(timer.target - now));
         if (progress >= 100) {
             progressBar.css("width", "100%").html('100%').addClass("progress-finished");
             timer.status = "finished";
