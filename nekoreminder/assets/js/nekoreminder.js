@@ -1,29 +1,21 @@
 // SETUP GLOBAL VARS
-var timerArea, reminderNum, reminderNote, reminderSubmit,
-    timers = [],
-    neko = {};
+var neko = {
+        'timers': [],
+        'timerdata': {},
+        'ticker': new interval(neko.tick, 100)
+};
 
-// EXECUTE INIT
-$(function(){
-    neko.init();
-});
+// RUN INIT ON LOAD
+$(function(){neko.init();});
 
 // INIT FUNCTION
 neko.init = function() {
-    timerArea = $("#timer-area");
-    reminderNum = $("#reminder-number");
-    reminderNote = $("#reminder-note");
-    reminderSubmit = $("#reminder-submit");
-
-    reminderSubmit.on("click", neko.submit);
+    $("#reminder-submit").on("click", neko.submit);
 
     //NOTIFICATIONS
     if (Notification.permission === "default") {
         Notification.requestPermission();
     }
-
-    // SETUP TICKER
-    neko.ticker = new interval(neko.tick, 100);
 
     // WINDOW EVENTS
     window.addEventListener('blur', function() {
@@ -43,7 +35,7 @@ neko.init = function() {
     });
 
     //SORTABLE
-    timerArea.sortable({
+    $("#timer-area").sortable({
         'containment': '#timer-area'
     });
 }
@@ -51,7 +43,7 @@ neko.init = function() {
 neko.submit = function() {
     let newTimer = {},
         now = Date.now(),
-        targetInput = tagsInputRead(reminderNum[0]),
+        targetInput = tagsInputRead($("#reminder-number")[0]),
         target = 0,
         targetTime,
         el;
@@ -70,7 +62,7 @@ neko.submit = function() {
 
     // Set data
     newTimer.target = now + (target * 1000);
-    newTimer.note = reminderNote.val().replace('<', '&lt;').replace('>', '&gt;') || "Untitled Timer";
+    newTimer.note = $("#reminder-note").val().replace('<', '&lt;').replace('>', '&gt;') || "Untitled Timer";
     newTimer.lastTick = now;
     newTimer.startedAt = now;
     newTimer.id = now.toString(16);
@@ -84,10 +76,10 @@ neko.submit = function() {
     // Close Button
     el.append($("<button>").html("X").on("click",function(){//Close function
         // find this timer in global array
-        let thisIndex = timers.findIndex(function(i){
+        let thisIndex = neko.timers.findIndex(function(i){
                 return i.id === newTimer.id;
             }.bind(newTimer)),
-            thisTimer = timers[thisIndex],
+            thisTimer = neko.timers[thisIndex],
             thisTimerUI = $("#"+thisTimer.id);
 
         // if timer is running create confirmBox instead
@@ -100,8 +92,8 @@ neko.submit = function() {
                 .append(
                     $("<button>").html("Yes").on("click", function(){
                         thisTimerUI.remove();
-                        toastr["success"]("Removed Timer &quot;" + timers[thisIndex].note + "&quot;","Removed Timer");
-                        timers.splice(thisIndex, 1);
+                        toastr["success"]("Removed Timer &quot;" + neko.timers[thisIndex].note + "&quot;","Removed Timer");
+                        neko.timers.splice(thisIndex, 1);
                     }.bind(thisIndex, thisTimerUI))
                 )
                 .append(
@@ -114,8 +106,8 @@ neko.submit = function() {
         }
         // remove timer
         thisTimerUI.remove();
-        toastr["success"]("Removed Timer &quot;" + timers[thisIndex].note + "&quot;","Removed Timer");
-        timers.splice(thisIndex, 1);
+        toastr["success"]("Removed Timer &quot;" + neko.timers[thisIndex].note + "&quot;","Removed Timer");
+        neko.timers.splice(thisIndex, 1);
     }.bind(newTimer)));
     // Title
     el.append($("<h2>").html(newTimer.note));
@@ -134,18 +126,18 @@ neko.submit = function() {
     );
 
     // Submit timer
-    timerArea.append(el);
-    timers.push(newTimer);
+    $("#timer-area").append(el);
+    neko.timers.push(newTimer);
     neko.ticker.start();
     toastr["success"]("Created Timer &quot;" + newTimer.note + "&quot;", "Created Timer");
 }
 // TICK FUNCTION
 neko.tick = function() {
-    if (timers.length < 1) {
+    if (neko.timers.length < 1) {
         neko.ticker.end();
         return;
     }
-    for (timer of timers) {
+    for (let timer of neko.timers) {
         if (timer.status != "running") continue;
         let now = Date.now(),
             progress = ((now - timer.startedAt) / (timer.target - timer.startedAt)) * 100,
