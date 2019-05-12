@@ -22,6 +22,15 @@
 </head>
 <body>
     <noscript>This site relies on javascript. It appears your browser is blocking javascript or does not support it.</noscript>
+    <section id="settings" style="display:none;">
+        <button onclick="$(this.parentElement).hide(200);">X</button>
+        <h1>Settings</h1>
+        <form onsubmit="return false;" oninput="neko.updateSettings();">
+            <label for="reminder-onblur-setting"><input type="checkbox" id="reminder-onblur-setting"> Lower Tickrate when tab not active</label><br>
+            <label for="reminder-allow-cookie"><input type="checkbox" id="reminder-allow-cookie"> Allow Neko Reminder to save cookies</label><br>
+            <p>Allowing cookies enables Neko Reminder to save your timers and settings on your machine so they don't get lost when you close this page!</p>
+        </form>
+    </section>
     <section id="form">
         <p style="display:none;">The accurate browser-based Reminder tool built on custom time-keeping code.</p>
         <h1>New Reminder</h1>
@@ -35,8 +44,7 @@
                 <td><input type="text" id="reminder-note" placeholder="Timer title"></td>
             </tr>
         </table>
-        <button id="reminder-submit">Start Reminder</button>
-        <label for="reminder-onblur-setting"><input type="checkbox" id="reminder-onblur-setting"> Lower Tickrate when tab not active</label>
+        <button id="reminder-submit">Start Reminder</button><button onclick="$('#settings').show(200);">Settings</button>
     </section>
     <section id="timer-area"></section>
     <footer>&copy;2019 Mitsunee</footer>

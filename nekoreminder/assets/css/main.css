@@ -19,6 +19,7 @@ body {
 }
 
 #form,
+#settings,
 noscript,
 .timer {
     border: 1px solid #ddd;
@@ -39,7 +40,9 @@ noscript,
 .timer:nth-child(3n+1) {
     clear:left;
 }
-#form {
+#form,
+#settings,
+noscript {
     width: 90%;
     margin: 1% auto;
 }
@@ -73,7 +76,8 @@ button~button,
 button~label{
     margin-left:6px;
 }
-.timer > button {
+.timer > button,
+#settings > button {
     float: right;
 }
 .timer > h2 {

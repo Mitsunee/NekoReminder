@@ -40,6 +40,9 @@ neko.init = function() {
     $("#timer-area").sortable({
         'containment': '#timer-area'
     });
+
+    //LOCALSTORAGE
+    neko.loadStorage();
 }
 
 // SUBMIT BUTTON FUNCTION
@@ -62,9 +65,9 @@ neko.submit = function() {
     neko.createTimer(target, note);
 }
 
-neko.createTimer = function(target, note) {
+neko.createTimer = function(target, note, startTime) {
     let newTimer = {},
-        now = Date.now(),
+        now = startTime || Date.now(),
         targetTime,
         el;
 
@@ -136,7 +139,12 @@ neko.createTimer = function(target, note) {
     neko.timers.push(newTimer.id);
     neko.timerData[newTimer.id] = newTimer;
     neko.ticker.start();
-    toastr["success"]("Created Timer &quot;" + newTimer.note + "&quot;", "Created Timer");
+    if(startTime === undefined) {
+        toastr["success"]("Created Timer &quot;" + newTimer.note + "&quot;", "Created Timer");
+    } else {
+        toastr["success"]("Loaded Timer &quot;" + newTimer.note + "&quot; from cookies.", "Loaded Timer");
+    }
+    neko.updateStorage();
 }
 
 // TICK FUNCTION
@@ -165,6 +173,7 @@ neko.tick = function() {
         }
         progressBar.css("width", progress.toString()+"%").html((0|progress).toString()+"%");
     }
+    neko.updateStorage();
 }
 
 neko.timeFromMilliseconds = function(stamp) {
@@ -193,6 +202,35 @@ neko.timeFromMilliseconds = function(stamp) {
     retval += (i < 10 ? "0" : "") + i.toString();
 
     return retval;
+}
+
+neko.updateStorage = function(ev) {
+    if ($("#reminder-allow-cookie")[0].checked) {
+        localStorage.setItem('cookieEnabled', 'enabled');
+        localStorage.setItem('blurModeEnabled', ($("#reminder-onblur-setting")[0].checked ? 'enabled' : 'disabled'));
+        localStorage.setItem('timerData', JSON.stringify(neko.timerData));
+        localStorage.setItem('timers', JSON.stringify(neko.timers));
+    } else {
+        localStorage.clear();
+    }
+}
+
+neko.loadStorage = function() {
+    if(localStorage.getItem('cookieEnabled') === null) return false;
+    $("#reminder-allow-cookie").prop('checked', true);
+    if(localStorage.getItem('blurModeEnabled') === "enabled") $("#reminder-onblur-setting").prop('checked', true);
+    let timerData = JSON.parse(localStorage.getItem('timerData'));
+    let timers = JSON.parse(localStorage.getItem('timers'));
+
+    neko.ticker.end();
+
+    for (let timer of timers) {
+        let data = timerData[timer];
+        neko.createTimer(data.target - data.startedAt, data.note, data.startedAt);
+        neko.timerData[data.id] = data;
+    }
+
+    if(timers.length > 0) neko.ticker.start();
 }
 
 toastr.options = {
