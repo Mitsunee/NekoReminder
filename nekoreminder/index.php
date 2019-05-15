@@ -25,10 +25,13 @@
     <section id="settings" style="display:none;">
         <button onclick="$(this.parentElement).hide(200);">X</button>
         <h1>Settings</h1>
-        <form onsubmit="return false;" oninput="neko.updateSettings();">
-            <label for="reminder-onblur-setting"><input type="checkbox" id="reminder-onblur-setting"> Lower Tickrate when tab not active</label><br>
-            <label for="reminder-allow-cookie"><input type="checkbox" id="reminder-allow-cookie"> Allow Neko Reminder to save cookies</label><br>
+        <form onsubmit="return false;" oninput="neko.updateStorage();">
+            <h3>Cookies & Storage</h3>
+            <label for="reminder-allow-cookie"><input type="checkbox" id="reminder-allow-cookie"> Allow Neko Reminder to save cookies</label>
             <p>Allowing cookies enables Neko Reminder to save your timers and settings on your machine so they don't get lost when you close this page!</p>
+            <h3>Blurmode</h3>
+            <label for="reminder-onblur-setting"><input type="checkbox" id="reminder-onblur-setting"> Lower Tickrate when tab not active</label>
+            <p>Blurmode interval: <input type="number" value="5" id="reminder-blurmode-interval"> seconds.</p>
         </form>
     </section>
     <section id="form">

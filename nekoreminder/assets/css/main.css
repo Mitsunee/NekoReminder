@@ -76,9 +76,22 @@ button~button,
 button~label{
     margin-left:6px;
 }
+#settings>form>label,
+#settings>form>p {
+    margin:4px;
+}
+#settings>form>p>input {
+    width:40px;
+}
 .timer > button,
 #settings > button {
     float: right;
+}
+#settings > form > h3 {
+    margin-block-end: .3em;
+}
+#settings > form > p {
+    text-align: justify;
 }
 .timer > h2 {
     margin: 0;

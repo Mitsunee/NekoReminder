@@ -1,7 +1,9 @@
 // SETUP GLOBAL VARS
 var neko = {
+    'data': {
         'timers': [],
-        'timerData': {}
+        'settings': {}
+    }
 };
 
 // RUN INIT ON LOAD
@@ -23,16 +25,15 @@ neko.init = function() {
     window.addEventListener('blur', function() {
         if ($("#reminder-onblur-setting").prop('checked') && neko.ticker.running) {
             neko.ticker.end();
-            neko.ticker.time = 5000;
+            neko.ticker.time = Number($("#reminder-blurmode-interval").val())*1000;
             neko.ticker.start();
         }
     });
     window.addEventListener('focus', function() {
         if (neko.ticker.time != 100) {
-            let wasRunning = neko.ticker.running;
-            if (wasRunning) neko.ticker.end();
+            neko.ticker.end();
             neko.ticker.time = 100;
-            if (wasRunning) neko.ticker.start();
+            if (neko.data.timers.length > 0) neko.ticker.start();
         }
     });
 
@@ -49,8 +50,10 @@ neko.init = function() {
 neko.submit = function() {
     let targetInput = tagsInputRead($("#reminder-number")[0]),
         target = 0,
-        note = $("#reminder-note").val().replace('<', '&lt;').replace('>', '&gt;');
+        note = $("#reminder-note").val().replace('<', '&lt;').replace('>', '&gt;'),
+        now = Date.now();
 
+    // convert target to milliseconds
     if (targetInput.length < 1) return;// if empty quit;
     for(let i in targetInput) {
         if (/^([0-9]+)(h|hr|m|min|s|sec)$/g.test(targetInput[i])) {
@@ -59,25 +62,24 @@ neko.submit = function() {
             target += interval.prototype.convert(targetInput[i]+"s");
         }
     }
-    if (target == 0) return;
-    target = 0| (target / 1000);// convert units to milliseconds and divide by 1000 rounding down.
 
-    neko.createTimer(target, note);
+    if (target == 0) return;
+    target += now;
+
+    neko.createTimer({target: target, note: note, startedAt: now});
+    toastr["success"]("Created Timer &quot;" + (note || "Untitled Timer") + "&quot;", "Created Timer");
+    neko.ticker.start();
 }
 
-neko.createTimer = function(target, note, startTime) {
-    let newTimer = {},
-        now = startTime || Date.now(),
-        targetTime,
-        el;
+neko.createTimer = function(newTimer) {
+    let now = newTimer.startedAt,
+        targetTime;
 
     // Set data
-    targetTime = new Date(now + (target * 1000));
-    newTimer.target = now + (target * 1000);
-    newTimer.note = note || "Untitled Timer";
-    newTimer.lastTick = now;
-    newTimer.startedAt = now;
-    newTimer.id = now.toString(16);
+    targetTime = new Date(newTimer.target);
+    if (newTimer.note === undefined || newTimer.note === "") newTimer.note = "Untitled Timer";
+    if (newTimer.lastTick === undefined) newTimer.lastTick = now;
+    if (newTimer.id === undefined) newTimer.id = now.toString(16);
     newTimer.status = 'running';
 
     // Create UI
@@ -88,7 +90,7 @@ neko.createTimer = function(target, note, startTime) {
     // Close Button
     el.append($("<button>").html("X").on("click",function(){//Close function
         // find this timer in global array
-        let thisTimer = neko.timerData[newTimer.id],
+        let thisTimer = neko.data[newTimer.id],
             thisTimerUI = $("#"+thisTimer.id);
 
         // if timer is running create confirmBox instead
@@ -96,27 +98,19 @@ neko.createTimer = function(target, note, startTime) {
             if (thisTimerUI.find('.confirm-box').length > 0) return;
 
             // create confirmBox
-            let confirmBox = $("<div>",{'class': 'confirm-box'});
+            let confirmBox = $("<div/>",{'class': 'confirm-box'});
             confirmBox.html('Do you really want to delete &quot;'+thisTimer.note+"&quot;?<br><br>")
-                .append(
-                    $("<button>").html("Yes").on("click", function(){
-                        thisTimerUI.remove();
-                        toastr["success"]("Removed Timer &quot;" + thisTimer.note + "&quot;","Removed Timer");
-                        neko.timers.splice(neko.timers.indexOf(thisTimer.id), 1);
-                    }.bind(thisTimer, thisTimerUI))
-                )
-                .append(
-                    $("<button>").html("No").on("click", function(){
-                        $(this).parent().remove();
-                    })
-                );
+                .append($("<button/>").html("Yes").on("click", function(){
+                    neko.removeTimer($(this).parent().parent().attr("id"));
+                }))
+                .append($("<button/>").html("No").on("click", function(){
+                    $(this).parent().remove();
+                }));
             thisTimerUI.append(confirmBox);
             return;
         }
         // remove timer
-        thisTimerUI.remove();
-        toastr["success"]("Removed Timer &quot;" + thisTimer.note + "&quot;","Removed Timer");
-        neko.timers.splice(neko.timers.indexOf(newTimer.id), 1);
+        neko.removeTimer(thisTimer.id);
     }.bind(newTimer)));
     // Title
     el.append($("<h2>").html(newTimer.note));
@@ -131,30 +125,31 @@ neko.createTimer = function(target, note, startTime) {
     // Text output
     el.append(
         $("<span>", {'class': 'small'})
-            .html('Ends in <span>' + neko.timeFromMilliseconds(target*1000) + '</span> (at ' + targetTime.toLocaleTimeString() + ')')
+            .html('Ends in <span>' + neko.timeFromMilliseconds(newTimer.target - newTimer.lastTick) + '</span> (at ' + targetTime.toLocaleTimeString() + ')')
     );
 
     // Submit timer
     $("#timer-area").append(el);
-    neko.timers.push(newTimer.id);
-    neko.timerData[newTimer.id] = newTimer;
-    neko.ticker.start();
-    if(startTime === undefined) {
-        toastr["success"]("Created Timer &quot;" + newTimer.note + "&quot;", "Created Timer");
-    } else {
-        toastr["success"]("Loaded Timer &quot;" + newTimer.note + "&quot; from cookies.", "Loaded Timer");
-    }
+    neko.data.timers.push(newTimer.id);
+    neko.data[newTimer.id] = newTimer;
+    neko.updateStorage();
+}
+
+neko.removeTimer = function(timer) {
+    neko.data.timers.splice(neko.data.timers.indexOf(timer), 1);
+    delete neko.data[timer];
+    $("#"+timer).remove();
     neko.updateStorage();
 }
 
 // TICK FUNCTION
 neko.tick = function() {
-    if (neko.timers.length < 1) {
+    if (neko.data.timers.length < 1) {
         neko.ticker.end();
         return;
     }
-    for (let timerId of neko.timers) {
-        let timer = neko.timerData[timerId];
+    for (let timerId of neko.data.timers) {
+        let timer = neko.data[timerId];
         if (timer.status != "running") continue;
         let now = Date.now(),
             progress = ((now - timer.startedAt) / (timer.target - timer.startedAt)) * 100,
@@ -206,28 +201,30 @@ neko.timeFromMilliseconds = function(stamp) {
 
 neko.updateStorage = function(ev) {
     if ($("#reminder-allow-cookie")[0].checked) {
-        localStorage.setItem('cookieEnabled', 'enabled');
-        localStorage.setItem('blurModeEnabled', ($("#reminder-onblur-setting")[0].checked ? 'enabled' : 'disabled'));
-        localStorage.setItem('timerData', JSON.stringify(neko.timerData));
-        localStorage.setItem('timers', JSON.stringify(neko.timers));
+        neko.data.settings.cookieEnabled = "enabled";
+        neko.data.settings.blurModeEnabled = ($("#reminder-onblur-setting").prop('checked') ? 'enabled' : 'disabled');
+        neko.data.settings.blurModeInterval = Number($("#reminder-blurmode-interval").val());
+        localStorage.setItem('nekoreminder', JSON.stringify(neko.data));
     } else {
         localStorage.clear();
     }
 }
 
 neko.loadStorage = function() {
-    if(localStorage.getItem('cookieEnabled') === null) return false;
-    $("#reminder-allow-cookie").prop('checked', true);
-    if(localStorage.getItem('blurModeEnabled') === "enabled") $("#reminder-onblur-setting").prop('checked', true);
-    let timerData = JSON.parse(localStorage.getItem('timerData'));
-    let timers = JSON.parse(localStorage.getItem('timers'));
+    let storage = localStorage.getItem('nekoreminder');
+    if(storage === null) return false;
 
-    neko.ticker.end();
+    storage = JSON.parse(storage);
+    $("#reminder-allow-cookie").prop('checked', true);
+    if (storage.settings.blurModeEnabled === "enabled") $("#reminder-onblur-setting").prop('checked', true);
+    $("#reminder-blurmode-interval").val(storage.settings.blurModeInterval);
+    let timerData = storage,
+        timers = timerData.timers;
 
     for (let timer of timers) {
         let data = timerData[timer];
-        neko.createTimer(data.target - data.startedAt, data.note, data.startedAt);
-        neko.timerData[data.id] = data;
+        neko.createTimer(data);
+        toastr["success"]("Loaded Timer &quot;" + data.note + "&quot; from cookies.", "Loaded Timer");
     }
 
     if(timers.length > 0) neko.ticker.start();
