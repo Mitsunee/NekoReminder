@@ -82,8 +82,17 @@ neko.createTimer = function(newTimer) {
         'id': newTimer.id,
         'class': 'timer'
     });
+    // Controls div
+    let timerControls = $("<div>", {'class': 'timer-controls'});
+    el.append($(timerControls));
+    // Move Right Button
+    timerControls.append($("<button>", {class: 'right'}).html(">").on("click", function(){
+        let thisTimerUI = $(this).parent().parent();
+        if (thisTimerUI.next().length == 0) return;
+        thisTimerUI.insertAfter(thisTimerUI.next());
+    }));
     // Close Button
-    el.append($("<button>").html("X").on("click",function(){//Close function
+    timerControls.append($("<button>", {'class': 'close'}).html("X").on("click",function(){//Close function
         // find this timer in global array
         let thisTimer = neko.data[newTimer.id],
             thisTimerUI = $("#"+thisTimer.id);
@@ -107,8 +116,19 @@ neko.createTimer = function(newTimer) {
         // remove timer
         neko.removeTimer(thisTimer.id);
     }.bind(newTimer)));
+    // Move Left Button
+    timerControls.append($("<button>", {class: 'left'}).html("<").on("click", function(){
+        let thisTimerUI = $(this).parent().parent();
+        if (thisTimerUI.prev().length == 0) return;
+        thisTimerUI.insertBefore(thisTimerUI.prev());
+    }));
+    /** Edit Title Button
+    timerControls.append($("<button>", {class: 'edit'}).html("?").on("click", function(){
+        let thisTimerUI = $(this).parent().parent();
+        thisTimerUI.addClass("editing");
+    }));**/
     // Title
-    el.append($("<h2>").html(newTimer.note));
+    el.append($("<h2>", {'title': newTimer.note}).html(newTimer.note));
     // ProgressBar
     el.append(
         $("<div>", {'class': 'progress'})
@@ -131,9 +151,11 @@ neko.createTimer = function(newTimer) {
 }
 
 neko.removeTimer = function(timer) {
+    let note = neko.data[timer].note;
     neko.data.timers.splice(neko.data.timers.indexOf(timer), 1);
     delete neko.data[timer];
     $("#"+timer).remove();
+    toastr["success"]("Deleted Timer &quot;" + (note || "Untitled Timer") + "&quot;", "Deleted Timer");
     neko.updateStorage();
 }
 
@@ -143,26 +165,30 @@ neko.tick = function() {
         neko.ticker.end();
         return;
     }
-    for (let timerId of neko.data.timers) {
-        let timer = neko.data[timerId];
-        if (timer.status != "running") continue;
+    let timers = $("#timer-area").find(".timer"),
+        timerIds = [];
+    for (let timer of timers) {
+        let timerData = neko.data[timer.id];
+        if (timerData.status != "running") continue;
         let now = Date.now(),
-            progress = ((now - timer.startedAt) / (timer.target - timer.startedAt)) * 100,
-            progressBar = $("#"+timerId).find(".progress-value"),
+            progress = ((now - timerData.startedAt) / (timerData.target - timerData.startedAt)) * 100,
+            progressBar = $("#"+timer.id).find(".progress-value"),
             diff = now - timer.lastTick;
 
-        timer.lastTick = now;
+        neko.data[timer.id].lastTick = now;
+        timerIds.push(timer.id);
         // Update UI
-        $("#"+timerId).find("span.small > span").html(neko.timeFromMilliseconds(timer.target - now));
+        $("#"+timer.id).find("span.small > span").html(neko.timeFromMilliseconds(timerData.target - now));
         if (progress >= 100) {
             progressBar.css("width", "100%").html('100%').addClass("progress-finished");
-            timer.status = "finished";
-            new Notification('Your Timer "' + timer.note + '" ended!');
-            toastr["info"]("Timer &quot;" + timer.note + "&quot; ended", "Timer ended");
+            timerData.status = "finished";
+            new Notification('Your Timer "' + timerData.note + '" ended!');
+            toastr["info"]("Timer &quot;" + timerData.note + "&quot; ended", "Timer ended");
             return;
         }
         progressBar.css("width", progress.toString()+"%").html((0|progress).toString()+"%");
     }
+    neko.data.timers = timerIds;
     neko.updateStorage();
 }
 

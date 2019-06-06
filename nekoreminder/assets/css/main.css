@@ -104,6 +104,26 @@ button~button,
 button~label{
     margin-left:6px;
 }
+button.left {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    float: left;
+}
+button.right {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    float: right;
+}
+button.edit {
+    float: left;
+}
+button.left,
+button.right,
+button.close,
+button.edit {
+    margin-right: 3px;
+    margin-left: 3px;
+}
 #settings>form>label,
 #settings>form>p {
     margin:4px;
@@ -111,7 +131,7 @@ button~label{
 #settings>form>p>input {
     width:40px;
 }
-.timer > button,
+.timer-controls > button.close,
 #settings > button {
     float: right;
 }
@@ -133,6 +153,12 @@ button~label{
     border: 1px solid #FDF;
     border-radius: 12px;
     background: rgba(80, 30, 30, 0.33);
+}
+.timer-controls {
+    display: none;
+}
+.timer:not(.editing):hover > .timer-controls {
+    display: block;
 }
 
 input[type="checkbox"] {
