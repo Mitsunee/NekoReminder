@@ -206,7 +206,7 @@ neko.updateStorage = function(ev) {
         neko.data.settings.blurModeInterval = Number($("#reminder-blurmode-interval").val());
         localStorage.setItem('nekoreminder', JSON.stringify(neko.data));
     } else {
-        localStorage.clear();
+        localStorage.removeItem('nekoreminder');
     }
 }
 
