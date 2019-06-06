@@ -30,15 +30,43 @@ noscript,
 }
 .timer {
     float: left;
-    width: 32%;
-    margin: 1% 2% 0 0;
+    margin-bottom: 1%;
 }
-.timer:nth-child(3n+0) {
-    /** This removes the margin for the 3rd element so everything adds up to 100% **/
-    margin: 1% 0;
+@media only screen and (min-width: 1501px) {
+    .timer {
+        width: 23%;
+        margin-right:2.6%;
+    }
+    .timer:nth-of-type(4n) {
+        margin-right:0;
+    }
 }
-.timer:nth-child(3n+1) {
-    clear:left;
+
+@media only screen and (max-width: 1500px) and (min-width: 1001px) {
+    .timer {
+        width: 31%;
+        margin-right:3.5%;
+    }
+    .timer:nth-of-type(3n) {
+        margin-right:0;
+    }
+}
+
+@media only screen and (max-width: 1000px) and (min-width: 501px) {
+    .timer {
+        width: 48%;
+        margin-right:4%;
+    }
+    .timer:nth-of-type(2n) {
+        margin-right:0;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .timer {
+        width: 100%;
+        margin-right:0;
+    }
 }
 #form,
 #settings,
