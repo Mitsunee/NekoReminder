@@ -37,11 +37,6 @@ neko.init = function() {
         }
     });
 
-    //SORTABLE
-    $("#timer-area").sortable({
-        'containment': '#timer-area'
-    });
-
     //LOCALSTORAGE
     neko.loadStorage();
 }
