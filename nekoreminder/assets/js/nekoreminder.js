@@ -165,10 +165,14 @@ neko.tick = function() {
         neko.ticker.end();
         return;
     }
+    if (neko.data.timers.map(x => neko.data[x].status === "finished").every((x) => x === true)) {
+        neko.ticker.end();
+    }
     let timers = $("#timer-area").find(".timer"),
         timerIds = [];
     for (let timer of timers) {
         let timerData = neko.data[timer.id];
+        timerIds.push(timer.id);
         if (timerData.status != "running") continue;
         let now = Date.now(),
             progress = ((now - timerData.startedAt) / (timerData.target - timerData.startedAt)) * 100,
@@ -176,7 +180,6 @@ neko.tick = function() {
             diff = now - timer.lastTick;
 
         neko.data[timer.id].lastTick = now;
-        timerIds.push(timer.id);
         // Update UI
         $("#"+timer.id).find("span.small > span").html(neko.timeFromMilliseconds(timerData.target - now));
         if (progress >= 100) {
