@@ -19,14 +19,21 @@ To make a reminder simply input your timer length in units seperated by spaces o
 
 Unsupported units will be ignored, numbers without units will be assumed to be seconds.
 You can give your reminder a title in the “Note” field.
+
 ![New Reminder](https://raw.githubusercontent.com/Mitsunee/NekoReminder/master/.guide_images/guide_new_reminder.png)
+
 ## (Re)moving a reminder
 If you hover a reminder with your mouse cursor three buttons will appear.
+
 ![hover buttons](https://raw.githubusercontent.com/Mitsunee/NekoReminder/master/.guide_images/guide_hover_butons.png)
+
 These allow you to change the order of timers as well as delete a timer. Should a timer still be running a prompt will appear asking if you really want to delete the timer.
+
 ![deletion prompt](https://raw.githubusercontent.com/Mitsunee/NekoReminder/master/.guide_images/guide_deletion_prompt.png)
+
 ## Settings
 Pressing the Settings button next to “Start Reminder” will open the settings window above. Here you can allow Neko Reminder to store your settings and timers on your system. Blurmode changes how often the timers get updated should the tab or window of Neko Reminder not be active. 
+
 ![settings](https://raw.githubusercontent.com/Mitsunee/NekoReminder/master/.guide_images/guide_settings.png)
 
 <a name="app"></a>
