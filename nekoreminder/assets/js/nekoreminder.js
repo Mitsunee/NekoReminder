@@ -3,6 +3,10 @@ var neko = {
     'data': {
         'timers': [],
         'settings': {}
+    },
+    'cache': {
+        'storage': "",
+        'lastTick': {}
     }
 };
 
@@ -66,16 +70,23 @@ neko.submit = function() {
     neko.ticker.start();
 }
 
-neko.createTimer = function(newTimer) {
+neko.createTimer = function(newTimer) { //required properties: target, startedAt
     let now = newTimer.startedAt,
         targetTime;
 
     // Set data
     targetTime = new Date(newTimer.target);
     if (newTimer.note === undefined || newTimer.note === "") newTimer.note = "Untitled Timer";
-    if (newTimer.lastTick === undefined) newTimer.lastTick = now;
     if (newTimer.id === undefined) newTimer.id = now.toString(16);
     newTimer.status = 'running';
+
+    // Set last tick point in cache
+    if (newTimer.lastTick === undefined) {
+        neko.cache.lastTick[newTimer.id] = now;
+    } else { // temporary cleanup for old data
+        neko.cache.lastTick[newTimer.id] = newTimer.lastTick;
+        delete newTimer.lastTick;
+    }
 
     // Create UI
     el = $("<div>", {
@@ -177,9 +188,9 @@ neko.tick = function() {
         let now = Date.now(),
             progress = ((now - timerData.startedAt) / (timerData.target - timerData.startedAt)) * 100,
             progressBar = $("#"+timer.id).find(".progress-value"),
-            diff = now - timer.lastTick;
+            diff = now - neko.cache.lastTick[timer.id];
 
-        neko.data[timer.id].lastTick = now;
+        neko.cache.lastTick[timer.id] = now;
         // Update UI
         $("#"+timer.id).find("span.small > span").html(neko.timeFromMilliseconds(timerData.target - now));
         if (progress >= 100) {
@@ -225,10 +236,18 @@ neko.timeFromMilliseconds = function(stamp) {
 
 neko.updateStorage = function(ev) {
     if ($("#reminder-allow-cookie")[0].checked) {
+        // Update settings data
         neko.data.settings.cookieEnabled = "enabled";
         neko.data.settings.blurModeEnabled = ($("#reminder-onblur-setting").prop('checked') ? 'enabled' : 'disabled');
         neko.data.settings.blurModeInterval = Number($("#reminder-blurmode-interval").val());
-        localStorage.setItem('nekoreminder', JSON.stringify(neko.data));
+
+        // redo cache and compare, return if no difference
+        let newCache = JSON.stringify(neko.data);
+        if (newCache == neko.cache.storage) return;
+
+        // set storage and save copy to cache
+        localStorage.setItem('nekoreminder', newCache);
+        neko.cache.storage = newCache;
     } else {
         localStorage.removeItem('nekoreminder');
     }
@@ -236,8 +255,9 @@ neko.updateStorage = function(ev) {
 
 neko.loadStorage = function() {
     let storage = localStorage.getItem('nekoreminder');
-    if(storage === null) return false;
+    if (storage === null) return false;
 
+    neko.cache.storage = storage;
     storage = JSON.parse(storage);
     $("#reminder-allow-cookie").prop('checked', true);
     if (storage.settings.blurModeEnabled === "enabled") $("#reminder-onblur-setting").prop('checked', true);
