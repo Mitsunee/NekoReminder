@@ -32,6 +32,8 @@
             <h3>Blurmode</h3>
             <label for="reminder-onblur-setting"><input type="checkbox" id="reminder-onblur-setting"> Lower Tickrate when tab not active</label>
             <p>Blurmode interval: <input type="number" value="5" id="reminder-blurmode-interval"> seconds.</p>
+            <h3>Darkmode</h3>
+            <label for="reminder-darkmode-setting"><input type="checkbox" id="reminder-darkmode-setting"> Enable Darkmode</label>
         </form>
     </section>
     <section id="form">
