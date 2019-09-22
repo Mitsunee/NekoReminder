@@ -17,7 +17,7 @@
     <meta property="og:description" content="The accurate browser-based Reminder tool built on custom time-keeping code.">
     <link rel="stylesheet" href="assets/css/toastr-2.1.3.min.css">
     <link rel="stylesheet" href="assets/css/main.css?_<?php echo filemtime("assets/css/main.css");?>">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="assets/js/nekoreminder.min.js?_<?php echo filemtime("assets/js/nekoreminder.min.js");?>"></script>
 </head>
 <body>
@@ -32,6 +32,8 @@
             <h3>Blurmode</h3>
             <label for="reminder-onblur-setting"><input type="checkbox" id="reminder-onblur-setting"> Lower Tickrate when tab not active</label>
             <p>Blurmode interval: <input type="number" value="5" id="reminder-blurmode-interval"> seconds.</p>
+            <h3>Darkmode</h3>
+            <label for="reminder-darkmode-setting"><input type="checkbox" id="reminder-darkmode-setting"> Enable Darkmode</label>
         </form>
     </section>
     <section id="form">

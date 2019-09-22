@@ -11,10 +11,8 @@ html, body {
 *::after {
     box-sizing: border-box
 }
-html {
-    background: repeating-linear-gradient(135deg, #FC9, #FB7 100px, #FBF 100px, #FDF 130px, #FDF 200px) #FB7 fixed;
-}
 body {
+    background: repeating-linear-gradient(135deg, #FC9, #FB7 100px, #FBF 100px, #FDF 130px, #FDF 200px) #FB7 fixed;
     font-family: 'Cairo', sans-serif;
 }
 
@@ -271,4 +269,56 @@ footer {
     font-size: 10px;
     padding: 0 6px;
     height: auto;
+}
+
+/** DARKMODE **/
+
+body.darkmode {
+    background: repeating-linear-gradient(135deg, #841, #551811 100px, #030303 100px, #090909 130px, #121212 200px) #121212 fixed;
+    color: #EEE;
+}
+body.darkmode span.small {
+    color: #CCC;
+}
+body.darkmode #form,
+body.darkmode #settings,
+body.darkmode noscript,
+body.darkmode .timer {
+    border: 1px solid #666;
+    background-color: rgba(48,48,48,0.9);
+    box-shadow: 2px 2px 7px 2px rgba(0,0,0,0.3);
+}
+body.darkmode footer {
+    border: 0;
+    border-top: 1px solid #666;
+    background-color: rgba(48,48,48,0.9);
+    box-shadow: 0px -2px 7px 2px rgba(0,0,0,0.3);
+}
+body.darkmode .tags-area>span {
+    background: #303030;
+}
+body.darkmode input[type="text"],
+body.darkmode input[type="number"],
+body.darkmode .tags-input {
+    border: 1px solid #666;
+    background-color: #212121;
+    color: #EEE;
+}
+body.darkmode .tags-input>input {border:0;}
+body.darkmode .progress-value {
+    box-shadow: 0 1px 1px 0 rgba(33, 33, 33, 0.4);
+	background: linear-gradient(to top, #B62, #773818) #773818;
+}
+body.darkmode .progress-finished {
+    background: linear-gradient(to bottom, #150, #291) #291;
+}
+body.darkmode button:not(.toast-close-button),
+body.darkmode label {
+    color: #EEE;
+    background: linear-gradient(to top, #B62, #773818) #773818;
+    border: 1px solid #420;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+}
+body.darkmode .timer > .confirm-box {
+    border: 1px solid #666;
 }

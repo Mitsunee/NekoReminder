@@ -240,6 +240,7 @@ neko.updateStorage = function(ev) {
         neko.data.settings.cookieEnabled = "enabled";
         neko.data.settings.blurModeEnabled = ($("#reminder-onblur-setting").prop('checked') ? 'enabled' : 'disabled');
         neko.data.settings.blurModeInterval = Number($("#reminder-blurmode-interval").val());
+        neko.data.settings.darkmodeEnabled = ($("#reminder-darkmode-setting").prop('checked') ? 'enabled' : 'disabled');
 
         // redo cache and compare, return if no difference
         let newCache = JSON.stringify(neko.data);
@@ -250,6 +251,13 @@ neko.updateStorage = function(ev) {
         neko.cache.storage = newCache;
     } else {
         localStorage.removeItem('nekoreminder');
+    }
+
+    // darkmode checkbox
+    if($("#reminder-darkmode-setting").prop('checked')) {
+        if(!$(document.body).hasClass("darkmode")) $(document.body).addClass("darkmode");
+    } else {
+        if($(document.body).hasClass("darkmode")) $(document.body).removeClass("darkmode");
     }
 }
 
@@ -262,6 +270,11 @@ neko.loadStorage = function() {
     $("#reminder-allow-cookie").prop('checked', true);
     if (storage.settings.blurModeEnabled === "enabled") $("#reminder-onblur-setting").prop('checked', true);
     $("#reminder-blurmode-interval").val(storage.settings.blurModeInterval);
+    if (storage.settings.darkmodeEnabled === "enabled") {
+        $("#reminder-darkmode-setting").prop('checked', true);
+        $(document.body).addClass("darkmode");
+    }
+
     let timerData = storage,
         timers = timerData.timers;
 

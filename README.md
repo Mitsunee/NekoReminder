@@ -1,5 +1,5 @@
 # Neko Reminder
-![version](https://img.shields.io/badge/stable--release-1.4.2-green.svg) [![Link](https://img.shields.io/badge/https://-www.mitsunee.com-555555.svg?colorA=55DD88)](https://www.mitsunee.com/nekoreminder) ![GitHub repo size](https://img.shields.io/github/repo-size/Mitsunee/NekoReminder.svg) ![GitHub issues](https://img.shields.io/github/issues-raw/Mitsunee/NekoReminder.svg)
+![version](https://img.shields.io/badge/stable--release-1.5-green.svg) [![Link](https://img.shields.io/badge/https://-www.mitsunee.com-555555.svg?colorA=55DD88)](https://www.mitsunee.com/nekoreminder) ![GitHub repo size](https://img.shields.io/github/repo-size/Mitsunee/NekoReminder.svg) ![GitHub issues](https://img.shields.io/github/issues-raw/Mitsunee/NekoReminder.svg)
 
 The most(ly) accurate browser-based Reminder tool built on custom time-keeping code.
 
@@ -35,6 +35,8 @@ These allow you to change the order of timers as well as delete a timer. Should 
 Pressing the Settings button next to “Start Reminder” will open the settings window above. Here you can allow Neko Reminder to store your settings and timers on your system. Blurmode changes how often the timers get updated should the tab or window of Neko Reminder not be active.
 
 ![settings](https://raw.githubusercontent.com/Mitsunee/NekoReminder/master/.guide_images/guide_settings.png)
+
+*Note*: Version 1.5 also added a Darkmode setting!
 
 <a name="app"></a>
 # NekoReminderApp
