@@ -17,7 +17,7 @@
     <meta property="og:description" content="The accurate browser-based Reminder tool built on custom time-keeping code.">
     <link rel="stylesheet" href="assets/css/toastr-2.1.3.min.css">
     <link rel="stylesheet" href="assets/css/main.css?_<?php echo filemtime("assets/css/main.css");?>">
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="assets/js/nekoreminder.min.js?_<?php echo filemtime("assets/js/nekoreminder.min.js");?>"></script>
 </head>
 <body>
