@@ -97,25 +97,6 @@ footer {
     user-select: none;
 }
 
-/** SETTINGS MENU **/
-#settings>form>label,
-#settings>form>p {
-    margin:4px;
-}
-#settings>form>p>input {
-    width:40px;
-}
-.timer-controls > button.close,
-#settings > button {
-    float: right;
-}
-#settings > form > h3 {
-    margin-block-end: .3em;
-}
-#settings > form > p {
-    text-align: justify;
-}
-
 /** TIMERS **/
 .timer > h2 {
     margin: 0;
@@ -135,6 +116,9 @@ footer {
 }
 .timer:not(.editing):hover > .timer-controls {
     display: block;
+}
+.timer-controls > button.close {
+    float: right;
 }
 
 /** FORM INPUTS **/
@@ -159,6 +143,27 @@ td>input[type="text"] {
 #form table {
     margin-bottom: 12px;
 }
+
+/** SETTINGS MENU **/
+#settings > button {
+    float: right;
+}
+#settings > form > h3 {
+    margin-block-end: .3em;
+}
+#settings label {
+    display: block;
+    padding: 0;
+    padding-top: 12px;
+}
+#settings label,
+#settings p {
+    font-size: 14px;
+}
+#settings input[type="number"] {
+    width: 40px;
+}
+
 
 /** BUTTONS **/
 button {
