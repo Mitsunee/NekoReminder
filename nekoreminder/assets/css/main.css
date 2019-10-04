@@ -126,10 +126,6 @@ input[type="checkbox"] {
     padding: 0;
     margin: 0;
 }
-#reminder-submit {
-    position: relative;
-    top: -1px;
-}
 td>input[type="text"],
 .tags-input {
     width: 269px;
